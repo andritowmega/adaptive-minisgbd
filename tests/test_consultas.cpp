@@ -70,6 +70,14 @@ static void probarParser() {
     PlanConsulta planSinFiltro = Parser::parsear("SELECCIONAR * DE productos");
     VERIFICAR(!planSinFiltro.filtro.presente, "SELECCIONAR sin DONDE no tiene filtro");
 
+    PlanConsulta planOrden = Parser::parsear("SELECCIONAR * DE productos ORDENAR POR precio");
+    VERIFICAR(planOrden.tieneOrden && planOrden.columnaOrden == "precio" && !planOrden.ordenDescendente,
+              "SELECCIONAR ORDENAR POR parsea ascendente por defecto");
+
+    PlanConsulta planOrdenDesc = Parser::parsear("SELECCIONAR * DE productos DONDE precio > 100 ORDENAR POR precio DESC");
+    VERIFICAR(planOrdenDesc.filtro.presente && planOrdenDesc.tieneOrden && planOrdenDesc.ordenDescendente,
+              "SELECCIONAR admite DONDE seguido de ORDENAR POR ... DESC");
+
     PlanConsulta planEliminar = Parser::parsear("ELIMINAR DE productos DONDE id = 7");
     VERIFICAR(planEliminar.operacion == TipoOperacion::ELIMINAR, "parsea ELIMINAR");
 
@@ -133,6 +141,22 @@ static void probarEjecutorEndToEnd() {
 
     auto resultadoMenor = correr(ejecutor, "SELECCIONAR * DE test_consultas_productos DONDE id < 3");
     VERIFICAR(resultadoMenor.size() == 4, "DONDE id < 3 (rango abierto, limite incluido) devuelve 0..3");
+
+    // --- ORDENAR POR: Internal Sort sobre el resultado ya materializado ---
+    auto resultadoAsc =
+        correr(ejecutor, "SELECCIONAR * DE test_consultas_productos DONDE id ENTRE 10 Y 15 ORDENAR POR precio");
+    VERIFICAR(resultadoAsc.size() == 6 && std::get<int>(resultadoAsc[0][0]) == 10 &&
+                  std::get<int>(resultadoAsc[5][0]) == 15,
+              "ORDENAR POR precio (ascendente por defecto) ordena de menor a mayor");
+
+    auto resultadoDesc = correr(
+        ejecutor, "SELECCIONAR * DE test_consultas_productos DONDE id ENTRE 10 Y 15 ORDENAR POR precio DESC");
+    VERIFICAR(resultadoDesc.size() == 6 && std::get<int>(resultadoDesc[0][0]) == 15 &&
+                  std::get<int>(resultadoDesc[5][0]) == 10,
+              "ORDENAR POR precio DESC ordena de mayor a menor");
+
+    VERIFICAR_LANZA(correr(ejecutor, "SELECCIONAR * DE test_consultas_productos ORDENAR POR columna_inexistente"),
+                    "ORDENAR POR una columna inexistente lanza error");
 
     // --- Insertar una fila nueva DESPUES de que el indice existe: debe quedar sincronizado ---
     correr(ejecutor, "INSERTAR EN test_consultas_productos VALORES (999, 'prod_999', 9990)");

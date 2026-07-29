@@ -241,6 +241,18 @@ PlanConsulta parsearSeleccionar(Cursor& cursor) {
         cursor.avanzar();
         plan.filtro = parsearCondicionDonde(cursor);
     }
+    if (cursor.esPalabra("ORDENAR")) {
+        cursor.avanzar();
+        cursor.esperarPalabra("POR");
+        plan.tieneOrden = true;
+        plan.columnaOrden = cursor.esperarIdentificador();
+        if (cursor.esPalabra("DESC")) {
+            cursor.avanzar();
+            plan.ordenDescendente = true;
+        } else if (cursor.esPalabra("ASC")) {
+            cursor.avanzar();
+        }
+    }
     return plan;
 }
 

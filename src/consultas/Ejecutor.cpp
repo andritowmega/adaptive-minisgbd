@@ -1,5 +1,6 @@
 #include "consultas/Ejecutor.h"
 
+#include <algorithm>
 #include <stdexcept>
 
 #include "almacenamiento/Registro.h"
@@ -73,6 +74,23 @@ std::vector<std::vector<Valor>> Ejecutor::ejecutarSeleccionar(const PlanConsulta
         buffer_.liberarPagina(tabla.archivoDatos, rid.numeroPagina, false);
         if (ok) resultado.push_back(Registro::deserializar(bytes, tabla.esquema));
     }
+
+    if (plan.tieneOrden) {
+        int indiceColumna = tabla.esquema.indiceColumna(plan.columnaOrden);
+        if (indiceColumna < 0) {
+            throw std::runtime_error("Ejecutor: la columna '" + plan.columnaOrden +
+                                      "' de ORDENAR POR no existe en la tabla '" + plan.tabla + "'");
+        }
+        bool descendente = plan.ordenDescendente;
+        // Internal Sort: el resultado ya esta materializado por completo en
+        // memoria (no hace falta un External Merge Sort para el volumen de
+        // datos de este prototipo), asi que alcanza con ordenar el vector.
+        std::sort(resultado.begin(), resultado.end(),
+                  [indiceColumna, descendente](const std::vector<Valor>& a, const std::vector<Valor>& b) {
+                      return descendente ? b[indiceColumna] < a[indiceColumna] : a[indiceColumna] < b[indiceColumna];
+                  });
+    }
+
     return resultado;
 }
 

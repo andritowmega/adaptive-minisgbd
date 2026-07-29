@@ -91,6 +91,9 @@ sgbd> SELECCIONAR * DE empleados DONDE id = 1
 sgbd> SELECCIONAR * DE empleados DONDE salario ENTRE 2000 Y 4000
 (1, ana, 3200)
 1 fila(s).
+sgbd> SELECCIONAR * DE empleados ORDENAR POR salario DESC
+(1, ana, 3200)
+1 fila(s).
 sgbd> TABLAS
   empleados
 sgbd> DESCRIBIR empleados
@@ -116,7 +119,7 @@ include/, src/
 └── consultas/      Parser de comandos + ejecutor de consultas
 
 benchmarks/  Generador de cargas sintéticas + harness de evaluación
-tests/       4 suites de prueba (~78 verificaciones)
+tests/       4 suites de prueba (71 verificaciones)
 docs/        Diseño del sistema completo, en formato de artículo científico
 main.cpp     REPL interactivo
 ```
@@ -128,7 +131,9 @@ main.cpp     REPL interactivo
 - **Buffer Manager**: buffer pool con reemplazo **LRU**, compartido entre tabla e índices.
 - **Índices**: **Hash Extensible** y **B+ Tree**, ambos paginados en disco, intercambiables
   detrás de una interfaz común.
-- **Procesamiento de consultas**: `SELECCIONAR` con filtros `DONDE` (punto y rango).
+- **Procesamiento de consultas**: `SELECCIONAR` con filtros `DONDE` (punto y rango) y
+  `ORDENAR POR` (opcional, `ASC`/`DESC` — Internal Sort sobre el resultado ya materializado
+  en memoria, ya que no requiere ningún índice).
 - **Gestor de consultas**: parser propio de comandos + ejecutor sobre el almacenamiento.
 - **Evaluación**: comparación de tiempos sin índices / índice fijo / selección automática,
   con cargas sintéticas de proporción punto/rango variable.

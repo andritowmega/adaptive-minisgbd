@@ -13,6 +13,7 @@ namespace minisgbd {
 //   CREAR TABLA nombre (col1:ENTERO, col2:TEXTO(20), ...)
 //   INSERTAR EN nombre VALORES (v1, v2, ...)
 //   SELECCIONAR * DE nombre [DONDE columna (= v | ENTRE v1 Y v2 | > v | >= v | < v | <= v)]
+//                    [ORDENAR POR columna [ASC|DESC]]
 //   ELIMINAR DE nombre DONDE columna (= v | ENTRE v1 Y v2 | > v | >= v | < v | <= v)
 //
 // Palabras clave insensibles a mayúsculas/minúsculas; nombres de tabla/columna

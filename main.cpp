@@ -31,6 +31,7 @@ void imprimirAyuda() {
                  "  CREAR TABLA nombre (col1:ENTERO, col2:TEXTO(20), ...)\n"
                  "  INSERTAR EN nombre VALORES (v1, v2, ...)\n"
                  "  SELECCIONAR * DE nombre [DONDE columna (= v | ENTRE v1 Y v2 | > v | >= v | < v | <= v)]\n"
+                 "                          [ORDENAR POR columna [ASC|DESC]]\n"
                  "  ELIMINAR DE nombre DONDE columna (= v | ENTRE v1 Y v2 | > v | >= v | < v | <= v)\n"
                  "  TABLAS            (lista las tablas creadas en esta sesion)\n"
                  "  DESCRIBIR nombre  (muestra las columnas de una tabla)\n"

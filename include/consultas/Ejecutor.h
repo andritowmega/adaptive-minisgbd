@@ -16,6 +16,10 @@ namespace minisgbd {
 // memoria. INSERTAR/ELIMINAR mantienen sincronizados los índices activos de
 // todas las columnas de la tabla (si no se hiciera, un índice quedaría
 // desactualizado apenas se insertara una fila después de construirlo).
+// SELECCIONAR admite además ORDENAR POR: el resultado ya está materializado
+// por completo en memoria antes de devolverse, así que ordenarlo es un
+// Internal Sort (std::sort) directo sobre ese vector — no hace falta un
+// External Merge Sort para el volumen de datos de este prototipo.
 class Ejecutor {
 public:
     Ejecutor(Catalogo& catalogo, GestorBuffer& buffer, GestorIndices& gestorIndices);

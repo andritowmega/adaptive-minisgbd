@@ -43,6 +43,13 @@ struct PlanConsulta {
     std::vector<Columna> columnasDefinicion;  // solo CREAR_TABLA
     std::vector<Valor> valoresInsertar;       // solo INSERTAR
     CondicionFiltro filtro;                   // SELECCIONAR (opcional) / ELIMINAR (obligatorio)
+
+    // ORDENAR POR columna [ASC|DESC], solo SELECCIONAR (opcional). Se aplica
+    // sobre el resultado ya materializado en memoria (Internal Sort), no
+    // necesita ningún indice.
+    bool tieneOrden = false;
+    std::string columnaOrden;
+    bool ordenDescendente = false;
 };
 
 }  // namespace minisgbd
