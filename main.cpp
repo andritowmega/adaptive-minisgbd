@@ -4,6 +4,7 @@
 // (tests/*.cpp) y el benchmark (benchmarks/main_benchmark.cpp) son la forma
 // "seria" de verificacion del proyecto.
 #include <cctype>
+#include <filesystem>
 #include <iostream>
 #include <string>
 
@@ -90,6 +91,19 @@ void describirTabla(Catalogo& catalogo, const std::string& nombreTabla) {
 }  // namespace
 
 int main() {
+    // "datos" es una ruta relativa: se resuelve segun la carpeta desde la que
+    // se ejecuta el programa, no segun donde esta el .exe. Si corres el
+    // programa parado dentro de bin/ en vez de la raiz del proyecto, esto
+    // apuntaria a bin/datos (vacio) en vez de a tus datos reales — por eso
+    // se imprime la ruta absoluta resuelta, para que el problema se note de
+    // inmediato en vez de parecer que "se perdieron los datos".
+    std::filesystem::path directorioDatos = std::filesystem::absolute("datos");
+    std::cout << "Directorio de datos: " << directorioDatos.string() << "\n";
+    if (!std::filesystem::exists(directorioDatos)) {
+        std::cout << "  (no existe todavia; si esperabas ver tablas de antes, "
+                     "verifica que estas corriendo el programa desde la carpeta raiz del proyecto)\n";
+    }
+
     Catalogo catalogo("datos/catalogo.txt", "datos");
     GestorBuffer buffer(100);
     GestorIndices gestorIndices(catalogo, buffer, "datos");
