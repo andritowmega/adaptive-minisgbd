@@ -127,13 +127,32 @@ ResultadoCorrida correrEstrategia(double proporcionPuntual, const std::string& n
 }  // namespace
 
 int main() {
+    std::cerr << "Poblando tabla de " << TOTAL_FILAS << " filas...\n";
     crearYPoblarTabla();
 
     // Barrido de todo el espectro point/range (0%..100% en pasos de 10%): el
     // objetivo es mostrar que la seleccion automatica nunca es la peor
     // opcion en ningun punto del espectro, aunque no sea siempre la optima.
-    std::vector<ResultadoCorrida> resultados;
+    //
+    // Cada corrida (2000 consultas) tarda unos segundos; con 44 corridas en
+    // total el barrido completo lleva 1-2 minutos. Se reporta progreso por
+    // stderr y cada fila del CSV se imprime (por stdout) apenas se calcula,
+    // en vez de acumular todo en memoria y recien imprimir al final —
+    // si no, el programa parece colgado durante todo ese tiempo.
+    std::cout << "proporcion_puntual,estrategia,tiempo_total_ms,tiempo_promedio_us,tasa_aciertos_buffer\n";
+    std::cout.flush();
+
     std::vector<std::pair<double, bool>> veredictoPorProporcion;  // (proporcion, ¿auto fue la peor?)
+
+    auto correrYReportar = [&](double proporcion, const std::string& nombre, ModoGestorIndices modo,
+                                TipoIndice tipoFijo, const std::vector<ConsultaSintetica>& consultas) {
+        std::cerr << "  corriendo proporcion=" << proporcion << " estrategia=" << nombre << "...\n";
+        ResultadoCorrida r = correrEstrategia(proporcion, nombre, modo, tipoFijo, consultas);
+        std::cout << r.proporcionPuntual << "," << r.estrategia << "," << r.tiempoTotalMs << ","
+                   << r.tiempoPromedioUs << "," << r.tasaAciertosBuffer << "\n";
+        std::cout.flush();
+        return r;
+    };
 
     for (int paso = 0; paso <= 10; ++paso) {
         double proporcion = paso / 10.0;
@@ -142,30 +161,19 @@ int main() {
                                       /*semilla=*/12345);
 
         ResultadoCorrida sinIndices =
-            correrEstrategia(proporcion, "sin_indices", ModoGestorIndices::SIN_INDICES, TipoIndice::NINGUNO, consultas);
+            correrYReportar(proporcion, "sin_indices", ModoGestorIndices::SIN_INDICES, TipoIndice::NINGUNO, consultas);
         ResultadoCorrida fijoHash =
-            correrEstrategia(proporcion, "fijo_hash", ModoGestorIndices::TIPO_FIJO, TipoIndice::HASH, consultas);
+            correrYReportar(proporcion, "fijo_hash", ModoGestorIndices::TIPO_FIJO, TipoIndice::HASH, consultas);
         ResultadoCorrida fijoBMas =
-            correrEstrategia(proporcion, "fijo_bmas", ModoGestorIndices::TIPO_FIJO, TipoIndice::BMAS, consultas);
-        ResultadoCorrida automatica = correrEstrategia(proporcion, "seleccion_automatica",
-                                                        ModoGestorIndices::SELECCION_AUTOMATICA, TipoIndice::NINGUNO,
-                                                        consultas);
+            correrYReportar(proporcion, "fijo_bmas", ModoGestorIndices::TIPO_FIJO, TipoIndice::BMAS, consultas);
+        ResultadoCorrida automatica = correrYReportar(proporcion, "seleccion_automatica",
+                                                       ModoGestorIndices::SELECCION_AUTOMATICA, TipoIndice::NINGUNO,
+                                                       consultas);
 
         double peorTiempo = std::max({sinIndices.tiempoTotalMs, fijoHash.tiempoTotalMs, fijoBMas.tiempoTotalMs,
                                        automatica.tiempoTotalMs});
         bool autoFuePeor = automatica.tiempoTotalMs >= peorTiempo;
         veredictoPorProporcion.push_back({proporcion, autoFuePeor});
-
-        resultados.push_back(sinIndices);
-        resultados.push_back(fijoHash);
-        resultados.push_back(fijoBMas);
-        resultados.push_back(automatica);
-    }
-
-    std::cout << "proporcion_puntual,estrategia,tiempo_total_ms,tiempo_promedio_us,tasa_aciertos_buffer\n";
-    for (const auto& r : resultados) {
-        std::cout << r.proporcionPuntual << "," << r.estrategia << "," << r.tiempoTotalMs << ","
-                   << r.tiempoPromedioUs << "," << r.tasaAciertosBuffer << "\n";
     }
 
     std::cout << "\n--- Veredicto: ¿la seleccion automatica fue la PEOR estrategia en esta proporcion? ---\n";
