@@ -1,0 +1,25 @@
+# Binarios compilados (se generan con build.ps1 / make, no se versionan)
+bin/
+*.exe
+*.o
+*.obj
+
+# Datos generados en tiempo de ejecucion: tablas, indices y catalogo.
+# Los recrean solos los tests, el benchmark y el REPL — no se versionan.
+datos/*
+!datos/.gitkeep
+# (benchmarks/resultados_benchmark.csv NO esta en datos/, asi que si se versiona:
+# es evidencia real citada en el README y en docs/diseno_sistema.md)
+
+# Archivos de diagnostico temporales (scratch_*.cpp para inspeccionar algo puntual)
+scratch_*
+
+# Editores / IDE
+.vscode/
+.vs/
+*.suo
+*.user
+
+# Sistema operativo
+Thumbs.db
+.DS_Store

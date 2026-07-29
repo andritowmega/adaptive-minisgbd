@@ -1,0 +1,60 @@
+﻿proporcion_puntual,estrategia,tiempo_total_ms,tiempo_promedio_us,tasa_aciertos_buffer
+0,sin_indices,6390.26,3195.13,0.276585
+0,fijo_hash,3277.96,1638.98,0.614961
+0,fijo_bmas,1092.74,546.368,0.972525
+0,seleccion_automatica,1279,639.499,0.962899
+0.1,sin_indices,7302.99,3651.49,0.258847
+0.1,fijo_hash,3257.06,1628.53,0.619187
+0.1,fijo_bmas,1084.02,542.012,0.970762
+0.1,seleccion_automatica,1200.86,600.428,0.960749
+0.2,sin_indices,6294.68,3147.34,0.238757
+0.2,fijo_hash,2638.16,1319.08,0.627554
+0.2,fijo_bmas,1099.37,549.686,0.970719
+0.2,seleccion_automatica,1217.91,608.954,0.960279
+0.3,sin_indices,6275.5,3137.75,0.212338
+0.3,fijo_hash,2390.78,1195.39,0.634329
+0.3,fijo_bmas,1168.11,584.057,0.968973
+0.3,seleccion_automatica,1294.97,647.486,0.958011
+0.4,sin_indices,6475.16,3237.58,0.194688
+0.4,fijo_hash,2126.67,1063.33,0.642831
+0.4,fijo_bmas,1141.29,570.647,0.967861
+0.4,seleccion_automatica,2387.03,1193.52,0.953135
+0.5,sin_indices,6736.2,3368.1,0.168283
+0.5,fijo_hash,1696.77,848.386,0.655615
+0.5,fijo_bmas,1139.79,569.895,0.966279
+0.5,seleccion_automatica,5662.2,2831.1,0.906154
+0.6,sin_indices,6926.65,3463.33,0.146125
+0.6,fijo_hash,1509.98,754.99,0.669785
+0.6,fijo_bmas,1172.06,586.032,0.965186
+0.6,seleccion_automatica,3497.61,1748.8,0.834415
+0.7,sin_indices,6827.63,3413.82,0.112935
+0.7,fijo_hash,1039.45,519.726,0.698198
+0.7,fijo_bmas,1120.76,560.379,0.963152
+0.7,seleccion_automatica,2031.71,1015.86,0.795365
+0.8,sin_indices,6833.99,3416.99,0.0899233
+0.8,fijo_hash,778.206,389.103,0.734237
+0.8,fijo_bmas,1216.67,608.337,0.961524
+0.8,seleccion_automatica,1968.85,984.427,0.826877
+0.9,sin_indices,6538.77,3269.38,0.0601264
+0.9,fijo_hash,419.748,209.874,0.795091
+0.9,fijo_bmas,1222.46,611.229,0.959477
+0.9,seleccion_automatica,508.435,254.217,0.784649
+1,sin_indices,6212.59,3106.3,0.0289167
+1,fijo_hash,58.4883,29.2442,0.914818
+1,fijo_bmas,1117.66,558.829,0.957765
+1,seleccion_automatica,187.733,93.8664,0.89508
+
+--- Veredicto: ¿la seleccion automatica fue la PEOR estrategia en esta proporcion? ---
+proporcion_puntual=0 -> no
+proporcion_puntual=0.1 -> no
+proporcion_puntual=0.2 -> no
+proporcion_puntual=0.3 -> no
+proporcion_puntual=0.4 -> no
+proporcion_puntual=0.5 -> no
+proporcion_puntual=0.6 -> no
+proporcion_puntual=0.7 -> no
+proporcion_puntual=0.8 -> no
+proporcion_puntual=0.9 -> no
+proporcion_puntual=1 -> no
+
+Conclusion: la seleccion automatica NUNCA fue la peor opcion en ningun punto del espectro.
